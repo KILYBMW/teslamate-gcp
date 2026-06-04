@@ -1,6 +1,6 @@
 project_id  = "TU_PROJECT_ID_AQUI"
-vm_name     = "instancia-docker"
-bucket_name = "tu-nombre-de-bucket-unico"
+vm_name     = "El-nombre-que-quieras-darle-a-la-VM"
+bucket_name = "tu-nombre-de-bucket-único"
 region      = "us-west1"
 zone        = "us-west1-b"
 environment = "dev"
