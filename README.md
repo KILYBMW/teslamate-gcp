@@ -31,23 +31,37 @@ Este despliegue está optimizado para ejecutarse desde **Google Cloud Shell**, d
 Si eres nuevo en GCP, necesitarás un proyecto.
 *   Ve a la Consola de GCP.
 *   En la barra superior, haz clic en el selector de proyectos y luego en "Nuevo proyecto".
-*   Apunta el **ID de tu proyecto** (no el nombre). Lo encontrarás en:
-    Consola GCP → Menú lateral → Inicio → columna **"ID del proyecto"**
+*   Apunta el **ID de tu proyecto** (no el nombre).
 <img width="1363" height="797" alt="image" src="https://github.com/user-attachments/assets/7a7edc36-64b2-4166-b1cc-7faf393facc4" />
 
 ### 2. Habilitar la facturación (Billing)
 
 Para poder crear recursos en GCP, tu proyecto debe tener una cuenta de facturación activa.
 *   Ve a la Consola de GCP → Menú de navegación → **Facturación**.
-*   Si no tienes una cuenta de facturación, se te guiará para crear una. GCP ofrece un crédito gratuito inicial para nuevos usuarios.
+*   Si no tienes una cuenta de facturación, se te guiará para crear una. GCP ofrece un crédito gratuito inicial para nuevos usuarios, así, podrás crear sin miedo lo que quieras antes de que realmente facturen algo.
+*   Más adelante podrás crear alertas y presupuestos que te avisen si por cualquier causa has superado ese límite.
 
 ### 3. Habilitar las APIs necesarias
 
 Asegúrate de que las siguientes APIs están habilitadas en tu proyecto. Esto es crucial para que Terraform pueda interactuar con los servicios de Compute Engine y Cloud Storage.
+**Activa Cloud Shell**
+Cloud Shell es una máquina virtual que cuenta con herramientas para desarrolladores. Ofrece un directorio principal persistente de 5 GB y se ejecuta en Google Cloud. Cloud Shell proporciona acceso de línea de comandos a tus recursos de Google Cloud.
 
+Haz clic en Activar Cloud Shell <img width="42" height="47" alt="image" src="https://github.com/user-attachments/assets/2a812399-64dd-419e-ae2a-1f277f61f056" /> en la parte superior de la consola de Google Cloud.
+
+Autoriza a Cloud Shell para que use tus credenciales para realizar llamadas a la API de Google Cloud.
+<img width="648" height="214" alt="image" src="https://github.com/user-attachments/assets/29efe410-98d2-45ab-ac4a-222fad53c38c" />
+
+Cuando te conectes, habrás completado la autenticación, y el proyecto estará configurado con tu Project_ID. El resultado contiene una línea que declara el Project_ID para esta sesión:
+<img width="831" height="75" alt="image" src="https://github.com/user-attachments/assets/cf065ee7-6dda-4782-8367-90771fbceec3" />
+
+Ya en este punto, ejecuta las siguientes líneas:
 ```bash
-gcloud services enable compute.googleapis.com storage.googleapis.com --project=TU_PROJECT_ID
+export PROJECT_ID=$(gcloud config get-value project)
+gcloud services enable compute.googleapis.com storage.googleapis.com --project=$PROJECT_ID
 ```
+Si no creaste y vinculaste al proyecto la cuenta de facturación, te mostrará un error parecido a este: _Billing account for project 'xxxxxxxx' is not found_
+Si va bien, aparecerá algo parecido a esto: _Operation "operations/acf.p2-944595932187-eecbbe77-227f-4af4-b086-bd8a7333f97c" finished successfully._
 
 ---
 
@@ -58,22 +72,23 @@ gcloud services enable compute.googleapis.com storage.googleapis.com --project=T
 En la terminal de **Cloud Shell**, ejecuta el siguiente comando para descargar los archivos:
 
 ```bash
-git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git instalar
+git clone https://github.com/KILYBMW/teslamate-gcp.git instalar
 cd instalar
 ```
 
-> **Tip:** También puedes abrir este repositorio directamente haciendo clic en el siguiente enlace (reemplaza con tu URL):
-> `https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/TU_USUARIO/TU_REPOSITORIO`
+> **Tip:** También puedes abrir este repositorio directamente en el EDITOR de Cloud Shell haciendo clic [AQUÍ](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/KILYBMW/teslamate-gcp).
+> De esta forma podrás editar el archivo del siguiente paso sin escribir comandos en la consola
+
 
 ### Paso 2 — Crear tu fichero de variables
 
-Copia el fichero de ejemplo y rellena tus valores:
+Copia el fichero de ejemplo (o quítale la extensión _example_) y rellena con tus valores:
 
 ```bash
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-Edita `terraform.tfvars` con un editor de texto:
+Edita `terraform.tfvars` con nano, vi o un editor de texto integrado en la consola (VSCODE):
 
 ```hcl
 project_id  = "mi-proyecto-gcp-12345"   # ID real de tu proyecto
@@ -97,13 +112,15 @@ Esto descarga el provider de Google y prepara el entorno local. Solo es necesari
 
 ### Paso 4 — Revisar el plan de despliegue
 
-Antes de crear nada, revisa qué va a hacer Terraform:
+Antes de crear nada, revisa qué va a hacer Terraform (qué crea, qué modifica, qué elimina):
 
 ```bash
 terraform plan
 ```
 
-Verás una lista de recursos que se van a crear. No se modifica nada todavía.
+Verás una lista de recursos que se van a crear. No se modifica nada todavía. Será parecido a esto:
+<img width="422" height="178" alt="image" src="https://github.com/user-attachments/assets/c11ff0c3-f4c6-4b1b-b943-d8a827df2027" />
+
 
 ### Paso 5 — Aplicar el despliegue
 
@@ -134,6 +151,8 @@ vm_internal_ip   = "10.138.0.x"
 vm_name          = "mi-vm"
 vm_zone          = "us-west1-b"
 ```
+La imagen muestra el resultado de mi istalación, será parecido al tuyo si todo ha ido bien:
+<img width="1027" height="301" alt="image" src="https://github.com/user-attachments/assets/df9e5979-bade-485a-aff0-eada4e1b0685" />
 
 ---
 
@@ -147,11 +166,15 @@ gcloud compute ssh NOMBRE_DE_TU_VM --zone=us-west1-b --project=TU_PROJECT_ID
 
 O desde la consola de GCP → Compute Engine → VM instances → botón **SSH**.
 
+En este punto ya tienes la VM lista con Docker y Tailscale instalados. Sigue la docu de teslamate y tailscale para inicializarlos de forma correcta.
+En el Bucket tienes 5 Gb gratis al mes, con tráfico ilimitado entre la VM y el Bucket. El tráfico entrante no se cobra, es decir, todo lo que subas es 'gratis'. La descarga ya no. Revisa los precios, pero son bastante ridículos en este sentido.
+
+
 ---
 
 ## Destruir la infraestructura
 
-Cuando ya no necesites los recursos, elimínalos para evitar costes:
+Cuando ya no necesites los recursos, elimínalos con este comando:
 
 ```bash
 terraform destroy
@@ -168,6 +191,7 @@ Sí, modificando las variables en `terraform.tfvars`. Sin embargo, ten en cuenta
 
 **¿La IP externa de la VM es fija?**
 No, es efímera. Cambia cada vez que se reinicia la VM. Si necesitas una IP estática, debes reservar una IP estática en GCP y asociarla en el bloque `access_config` de `main.tf`.
+De todas formas, no creo que nos haga falta, ya que usaremos Tailscale, Zerotier, etc.
 
 **¿Quiero la VM sin IP externa (solo red interna)?**
 Elimina el bloque `access_config {}` dentro de `network_interface` en `main.tf`.
@@ -176,7 +200,7 @@ Elimina el bloque `access_config {}` dentro de `network_interface` en `main.tf`.
 Terraform devolverá un error `409 Conflict`. Simplemente elige otro nombre en `terraform.tfvars`.
 
 **¿Puedo tener varias instancias de esta infraestructura en el mismo proyecto?**
-Sí. Asegúrate de que `vm_name` y `bucket_name` sean distintos en cada `terraform.tfvars`.
+Sí. Asegúrate de que `vm_name` y `bucket_name` sean distintos en cada `terraform.tfvars`, pero ya tendrás coste mensual si están ambas encendidas.
 
 ---
 
