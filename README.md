@@ -44,7 +44,9 @@ Para poder crear recursos en GCP, tu proyecto debe tener una cuenta de facturaci
 ### 3. Habilitar las APIs necesarias
 
 Asegúrate de que las siguientes APIs están habilitadas en tu proyecto. Esto es crucial para que Terraform pueda interactuar con los servicios de Compute Engine y Cloud Storage.
+
 **Activa Cloud Shell**
+
 Cloud Shell es una máquina virtual que cuenta con herramientas para desarrolladores. Ofrece un directorio principal persistente de 5 GB y se ejecuta en Google Cloud. Cloud Shell proporciona acceso de línea de comandos a tus recursos de Google Cloud.
 
 Haz clic en Activar Cloud Shell <img width="42" height="47" alt="image" src="https://github.com/user-attachments/assets/2a812399-64dd-419e-ae2a-1f277f61f056" /> en la parte superior de la consola de Google Cloud.
@@ -60,7 +62,8 @@ Ya en este punto, ejecuta las siguientes líneas:
 export PROJECT_ID=$(gcloud config get-value project)
 gcloud services enable compute.googleapis.com storage.googleapis.com --project=$PROJECT_ID
 ```
-Si no creaste y vinculaste al proyecto la cuenta de facturación, te mostrará un error parecido a este: _Billing account for project 'xxxxxxxx' is not found_
+Si no creaste y vinculaste al proyecto la cuenta de facturación, te mostrará un error parecido a este: _Billing account for project 'xxxxxxxx' is not found_.
+
 Si va bien, aparecerá algo parecido a esto: _Operation "operations/acf.p2-944595932187-eecbbe77-227f-4af4-b086-bd8a7333f97c" finished successfully._
 
 ---
@@ -77,7 +80,11 @@ cd instalar
 ```
 
 > **Tip:** También puedes abrir este repositorio directamente en el EDITOR de Cloud Shell haciendo clic [AQUÍ](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/KILYBMW/teslamate-gcp).
-> De esta forma podrás editar el archivo del siguiente paso sin escribir comandos en la consola
+> De esta forma podrás editar el archivo del siguiente paso sin escribir comandos en la consola.
+
+> Los archivos quedarán en la ruta de la imagen y no en la que creamos si ejecutamos por comandos, por lo que hay que tener claro dónde estamos:
+
+> <img width="297" height="140" alt="image" src="https://github.com/user-attachments/assets/ac295e36-7c1a-49e2-ace0-fcf265705533" />
 
 
 ### Paso 2 — Crear tu fichero de variables
@@ -160,16 +167,16 @@ La imagen muestra el resultado de mi istalación, será parecido al tuyo si todo
 
 Al estar en modo "Búnker", el acceso SSH solo es posible a través del túnel de Google Cloud o Tailscale:
 
-1. **Desde Cloud Shell (Recomendado):**
+1. **Desde Cloud Shell (La 1ª ves, sí o sí):**
    ```bash
-   gcloud compute ssh NOMBRE_DE_TU_VM --zone=TU_ZONA --tunnel-through-iap
+   gcloud compute ssh NOMBRE_DE_TU_VM --zone=TU_ZONA --project=TU_PROJECT_ID --tunnel-through-iap
    ```
 2. **Desde la consola:** Haz clic en el botón **SSH**. Google usará IAP automáticamente para saltar el firewall.
 <img width="1546" height="220" alt="image" src="https://github.com/user-attachments/assets/bdae2430-115c-435f-bec8-7ccc29c15c5f" />
 
 
 En este punto ya tienes la VM lista con Docker y Tailscale instalados. Sigue la docu de teslamate y tailscale para inicializarlos de forma correcta.
-En el Bucket tienes 5 Gb gratis al mes, con tráfico ilimitado entre la VM y el Bucket. El tráfico entrante no se cobra, es decir, todo lo que subas es 'gratis'. La descarga ya no. Revisa los precios, pero son bastante ridículos en este sentido.
+En el Bucket tienes 5 Gb gratis al mes, con tráfico ilimitado entre la VM y el Bucket. El tráfico entrante no se cobra, es decir, todo lo que subas es 'gratis'. La descarga ya no (solo el 1er Gb). Revisa los precios, pero son bastante ridículos en este sentido.
 
 
 ---
