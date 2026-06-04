@@ -165,6 +165,8 @@ gcloud compute ssh NOMBRE_DE_TU_VM --zone=us-west1-b --project=TU_PROJECT_ID
 ```
 
 O desde la consola de GCP → Compute Engine → VM instances → botón **SSH**.
+<img width="1546" height="220" alt="image" src="https://github.com/user-attachments/assets/bdae2430-115c-435f-bec8-7ccc29c15c5f" />
+
 
 En este punto ya tienes la VM lista con Docker y Tailscale instalados. Sigue la docu de teslamate y tailscale para inicializarlos de forma correcta.
 En el Bucket tienes 5 Gb gratis al mes, con tráfico ilimitado entre la VM y el Bucket. El tráfico entrante no se cobra, es decir, todo lo que subas es 'gratis'. La descarga ya no. Revisa los precios, pero son bastante ridículos en este sentido.
