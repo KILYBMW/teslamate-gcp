@@ -53,7 +53,8 @@ resource "google_compute_instance" "vm" {
 
     # Elimina este bloque si NO quieres IP externa efímera
     access_config {
-      # Dejar vacío = IP externa efímera asignada automáticamente
+      # El nivel STANDARD es más económico que el PREMIUM por defecto.
+      network_tier = "STANDARD"
     }
   }
 

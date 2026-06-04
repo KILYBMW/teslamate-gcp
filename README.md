@@ -12,7 +12,7 @@ Estos ficheros de Terraform despliegan una **VM de Compute Engine** y un **bucke
 | Zona | `us-west1-b` |
 | Imagen | Debian 12 Bookworm (x86-64) |
 | Disco arranque | 30 GB · pd-standard · lectura/escritura |
-| Red | VPC `default` · Subred `default` · IPv4 |
+| Red | VPC `default` · Subred `default` · IPv4 (Standard Tier) |
 | Firewall | Sin HTTP/HTTPS · Sin etiquetas de red |
 | Disponibilidad | STANDARD · Auto-restart activo · Migrar en mantenimiento |
 | **Software** | Docker, Docker Compose, Tailscale (vía Startup Script) |
