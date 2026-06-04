@@ -19,6 +19,16 @@ provider "google" {
 }
 
 # ==============================================================
+# CONFIGURACIÓN GLOBAL DEL PROYECTO
+# Fuerza a que el nivel predeterminado sea STANDARD para evitar
+# que nuevos recursos usen el nivel PREMIUM por descuido.
+# ==============================================================
+resource "google_compute_project_default_network_tier" "default" {
+  network_tier = "STANDARD"
+  project      = var.project_id
+}
+
+# ==============================================================
 # VM — Compute Engine
 # Zona       : us-west1-b
 # Tipo       : e2-micro (2 vCPU, 1 GB RAM)
@@ -53,7 +63,9 @@ resource "google_compute_instance" "vm" {
 
     # Elimina este bloque si NO quieres IP externa efímera
     access_config {
-      # El nivel STANDARD es más económico que el PREMIUM por defecto.
+      # STANDARD: tráfico de salida por redes ISP normales, más económico.
+      # PREMIUM (defecto GCP): tráfico por la red privada de Google, más caro.
+      # Para una VM personal Standard es suficiente y evita costes innecesarios.
       network_tier = "STANDARD"
     }
   }
@@ -173,7 +185,7 @@ resource "google_storage_bucket" "bucket" {
 
   # Evita que Terraform falle si el bucket tiene objetos al destruir.
   # Ponlo a true SOLO si quieres que terraform destroy borre también los objetos.
-  force_destroy = false
+  force_destroy = true
 
   labels = {
     environment = var.environment
