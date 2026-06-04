@@ -33,6 +33,7 @@ Si eres nuevo en GCP, necesitarás un proyecto.
 *   En la barra superior, haz clic en el selector de proyectos y luego en "Nuevo proyecto".
 *   Apunta el **ID de tu proyecto** (no el nombre). Lo encontrarás en:
     Consola GCP → Menú lateral → Inicio → columna **"ID del proyecto"**
+<img width="1363" height="797" alt="image" src="https://github.com/user-attachments/assets/7a7edc36-64b2-4166-b1cc-7faf393facc4" />
 
 ### 2. Habilitar la facturación (Billing)
 
