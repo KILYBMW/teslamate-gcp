@@ -29,6 +29,35 @@ resource "google_compute_project_default_network_tier" "default" {
 }
 
 # ==============================================================
+# RED (VPC) Y SUBRED
+# Creamos una red dedicada para no depender de la red "default".
+# ==============================================================
+resource "google_compute_network" "vpc_network" {
+  name                    = "${var.vm_name}-vpc"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "vpc_subnet" {
+  name          = "${var.vm_name}-subnet"
+  ip_cidr_range = "10.0.1.0/24"
+  region        = var.region
+  network       = google_compute_network.vpc_network.id
+}
+
+# Permitir SSH para poder gestionar la máquina
+resource "google_compute_firewall" "allow_ssh" {
+  name    = "${var.vm_name}-allow-ssh"
+  network = google_compute_network.vpc_network.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
+# ==============================================================
 # VM — Compute Engine
 # Zona       : us-west1-b
 # Tipo       : e2-micro (2 vCPU, 1 GB RAM)
@@ -58,8 +87,8 @@ resource "google_compute_instance" "vm" {
 
   # Red ────────────────────────────────────────────────────────
   network_interface {
-    network    = "default"
-    subnetwork = "default"
+    network    = google_compute_network.vpc_network.id
+    subnetwork = google_compute_subnetwork.vpc_subnet.id
 
     # Elimina este bloque si NO quieres IP externa efímera
     access_config {
