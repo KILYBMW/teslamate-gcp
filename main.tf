@@ -33,20 +33,21 @@ resource "google_compute_project_default_network_tier" "default" {
 # Creamos una red dedicada para no depender de la red "default".
 # ==============================================================
 resource "google_compute_network" "vpc_network" {
-  name                    = "${var.vm_name}-vpc"
+  name                    = lower("${var.vm_name}-vpc")
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "vpc_subnet" {
-  name          = "${var.vm_name}-subnet"
+  name          = lower("${var.vm_name}-subnet")
   ip_cidr_range = "10.0.1.0/24"
   region        = var.region
   network       = google_compute_network.vpc_network.id
 }
 
-# Permitir SSH para poder gestionar la máquina
+# Permitir SSH solo desde el Identity-Aware Proxy (IAP) de Google
+# Esto permite usar el botón "SSH" de la consola sin abrir el puerto al mundo.
 resource "google_compute_firewall" "allow_ssh" {
-  name    = "${var.vm_name}-allow-ssh"
+  name    = lower("${var.vm_name}-allow-ssh")
   network = google_compute_network.vpc_network.name
 
   allow {
@@ -54,7 +55,8 @@ resource "google_compute_firewall" "allow_ssh" {
     ports    = ["22"]
   }
 
-  source_ranges = ["0.0.0.0/0"]
+  # Rango de IPs de Google para IAP. Permite conectar por consola sin IP pública abierta.
+  source_ranges = ["35.235.240.0/20"]
 }
 
 # ==============================================================
@@ -68,7 +70,7 @@ resource "google_compute_firewall" "allow_ssh" {
 # ==============================================================
 
 resource "google_compute_instance" "vm" {
-  name         = var.vm_name
+  name         = lower(var.vm_name)
   machine_type = "e2-micro"
   zone         = var.zone
 
@@ -169,7 +171,7 @@ resource "google_compute_instance" "vm" {
 # ==============================================================
 
 resource "google_storage_bucket" "bucket" {
-  name          = var.bucket_name
+  name          = lower(var.bucket_name)
   location      = upper(var.region)
   storage_class = "STANDARD"
 

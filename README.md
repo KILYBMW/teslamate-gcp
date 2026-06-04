@@ -13,7 +13,7 @@ Estos ficheros de Terraform despliegan una **VM de Compute Engine** y un **bucke
 | Imagen | Debian 12 Bookworm (x86-64) |
 | Disco arranque | 30 GB · pd-standard · lectura/escritura |
 | Red | VPC dedicada · Subred 10.0.1.0/24 · IPv4 (Standard Tier) |
-| Firewall | Sin HTTP/HTTPS · Sin etiquetas de red |
+| Firewall | **Búnker**: Todo cerrado excepto túnel IAP (SSH interno) |
 | Disponibilidad | STANDARD · Auto-restart activo · Migrar en mantenimiento |
 | **Software** | Docker, Docker Compose, Tailscale (vía Startup Script) |
 | **Bucket** | Cloud Storage STANDARD |
@@ -158,13 +158,13 @@ La imagen muestra el resultado de mi istalación, será parecido al tuyo si todo
 
 ## Conectarse a la VM
 
-Una vez desplegada, puedes conectarte directamente desde gcloud:
+Al estar en modo "Búnker", el acceso SSH solo es posible a través del túnel de Google Cloud o Tailscale:
 
-```bash
-gcloud compute ssh NOMBRE_DE_TU_VM --zone=us-west1-b --project=TU_PROJECT_ID
-```
-
-O desde la consola de GCP → Compute Engine → VM instances → botón **SSH**.
+1. **Desde Cloud Shell (Recomendado):**
+   ```bash
+   gcloud compute ssh NOMBRE_DE_TU_VM --zone=TU_ZONA --tunnel-through-iap
+   ```
+2. **Desde la consola:** Haz clic en el botón **SSH**. Google usará IAP automáticamente para saltar el firewall.
 <img width="1546" height="220" alt="image" src="https://github.com/user-attachments/assets/bdae2430-115c-435f-bec8-7ccc29c15c5f" />
 
 
