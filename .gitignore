@@ -1,0 +1,12 @@
+# Terraform state y caché local — no subir a git
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfplan
+
+# Fichero de variables con datos del proyecto — no subir a repositorios públicos
+terraform.tfvars
+
+# Credenciales de cuenta de servicio
+*.json
