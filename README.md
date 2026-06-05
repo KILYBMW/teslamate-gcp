@@ -224,3 +224,11 @@ terraform.tfvars     Tu fichero de valores (créalo desde el .example, no se sub
 
 > 🔒 **Seguridad:** No subas `terraform.tfvars` a repositorios públicos si contiene
 > el ID de tu proyecto u otros datos sensibles. Añádelo al `.gitignore`.
+
+---
+
+## Capturas interesantes:
+<img width="876" height="425" alt="image" src="https://github.com/user-attachments/assets/6cd18151-fd73-473e-b985-b1361dce57e4" />
+<img width="872" height="286" alt="image" src="https://github.com/user-attachments/assets/7cc8a523-0d58-4e2c-9e4e-e420ff9767be" />
+<img width="1324" height="885" alt="image" src="https://github.com/user-attachments/assets/d962e271-3c2d-433a-9508-ccae31ad692e" />
+
